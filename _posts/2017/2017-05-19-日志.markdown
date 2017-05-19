@@ -18,3 +18,28 @@ Atom 的基础使用
 -- 第二天 --
 # day 2
 ** 学习keysblings
+
+--第三天--
+# day three
+  day three
+
+
+
+
+| 中文排版 | 要素描述                |
+|:---------|:------------------------|
+| 字体大小 | 16px 大一点更舒服       |
+| 行间距   | 1.8em是一个比较好的选择 |
+| 字间距   | 0.1em                   |
+| 字间距   | 0.1em已经约等于2px了    |
+
+```
+JavaScript
+  this is  python languages
+css3
+  代码块
+
+```
+
+---  
+  next paragraph
