@@ -206,7 +206,7 @@ public class HttpServerConfig {
   tomcat/undertow.由于netty是异步的基于事件驱动的天性,他就是一个很好的响应式应用.Tomcat 使用Java Nio 去实现servlet 规范.Netty是一个优化过的异步的/事件驱动的非阻塞IO的NIO的实现.
 
 - tomcat服务也呢给你使用如下的代码构建:
-  - ```
+  ```
   Tomcat tomcatServer = new Tomcat();
   tomcatServer.setHostname("localhost");
   tomcatServer.setPort(Integer.valueOf(environment.getProperty("server.port")));
