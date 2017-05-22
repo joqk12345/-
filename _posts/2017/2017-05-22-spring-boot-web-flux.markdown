@@ -154,9 +154,96 @@ public class Routes {
 
 
 ## 4. 创建一个HttpeServerConfig 类来创建一个httpServer类
-## 5. 创建一个Spring boot main 类来启动应用程序
-## 6. 创建一个Testing  类来测试应用程序
+```
+import org.springframework.http.server.reactive.HttpHandler;
+import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter;
+import reactor.ipc.netty.http.server.HttpServer;
+@Configuration
+public class HttpServerConfig {
+  @Autowired
+  private Environment environment;
 
+  @Bean
+  public HttpServer httpServer(RouterFunction<?> routerFunction) {
+    HttpHandler httpHandler = RouterFunctions.toHttpHandler(routerFunction);
+    ReactorHttpHandlerAdapter adapter = new ReactorHttpHandlerAdapter(httpHandler);
+    HttpServer server = HttpServer.create("localhost", Integer.valueOf(environment.getProperty("server.port")));
+    server.newHandler(adapter);
+    return server;
+  }
+}
+```
+- 这创建了一个netty httpServer 在应用程序定义的配置文件端口号上.Spring同样支持类似于
+  tomcat/undertow.由于netty是异步的基于事件驱动的天性,他就是一个很好的响应式应用.Tomcat 使用Java Nio 去实现servlet 规范.Netty是一个优化过的异步的/事件驱动的非阻塞IO的NIO的实现.
+
+- tomcat服务也呢给你使用如下的代码构建:
+  - ```
+  Tomcat tomcatServer = new Tomcat();
+  tomcatServer.setHostname("localhost");
+  tomcatServer.setPort(Integer.valueOf(environment.getProperty("server.port")));
+  Context rootContext = tomcatServer.addContext("", System.getProperty("java.io.tmpdir"));
+  ServletHttpHandlerAdapter servlet = new ServletHttpHandlerAdapter(httpHandler);
+  Tomcat.addServlet(rootContext, "httpHandlerServlet", servlet);
+  rootContext.addServletMapping("/", "httpHandlerServlet");
+  tomcatServer.start();
+  ```
+
+## 5. 创建一个Spring boot main 类来启动应用程序
+```
+@SpringBootApplication
+public class Spring5ReactiveApplication {
+public static void main(String[] args) throws IOException {
+SpringApplication.run(Spring5ReactiveApplication.class, args);
+}
+}
+```
+## 6. 创建一个Testing  类来测试应用程序
+- Http testing 测试工具
+  - postman/或者curl来进行测试,
+- 集成化测试
+
+```
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+public class UserTest {
+@Autowired
+private WebTestClient webTestClient;
+
+@Test
+public void test() throws IOException {
+FluxExchangeResult<User> result = webTestClient.get().uri("/api/user").accept(MediaType.APPLICATION_JSON)
+.exchange().returnResult(User.class);
+assert result.getStatus().value() == 200;
+List<User> users = result.getResponseBody().collectList().block();
+assert users.size() == 2;
+assert users.iterator().next().getUser().equals("User1");
+}
+
+@Test
+public void test1() throws IOException {
+User user = webTestClient.get().uri("/api/user/1")
+.accept(MediaType.APPLICATION_JSON).exchange().returnResult(User.class).getResponseBody().blockFirst();
+assert user.getId() == 1;
+assert user.getUser().equals("User1");
+}
+
+@Test
+public void test2() throws IOException {
+webTestClient.get().uri("/api/user/10").accept(MediaType.APPLICATION_JSON).exchange().expectStatus()
+.isNotFound();
+}
+}
+```
+ - WebTestClient就像 TestRestTemplate类,在spring boot中有发起rest call并判断其返回值的方法.
+ - 在测试配置中,Spring test 创建了一个TestRestTemplate的bean.他也是胰脏鞥呢webClient;就像spring web 的RestTemplate.他就可以进行响应式/非阻塞的测试
+```
+WebClient.create("http://localhost:9000").get().uri("/api/user/1")
+        .accept(MediaType.APPLICATION_JSON).exchange().flatMap(resp -> resp.bodyToMono(User.class)).block();
+```
+  exchange()返回一个Mono<ClientResponse> 他代表了一个流引用.
+  block() 阻塞线程直到Mono返回User/List<User>这是因为测试用例是需要返回值响应的.
+
+  Spring web 是容易开发和调试的.不管桑踹鞥呢Spring5 的响应式 或者Spring Web 命令式服务按照用例场景都是很明智的.在许多场景下,命令式可能工作的更好,但是在一些场景下高可用是关键的业务场景下,响应式非阻塞或许是一个更好的选择.
 
 
 [参考文档][eba9ca0e]
