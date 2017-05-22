@@ -69,9 +69,10 @@ var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 ```
 
-+ nihao 
++ nihao
 + wobuhao
 
 
 1. ni
 2. hao
+3. {nih}haohoa
