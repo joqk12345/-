@@ -3,7 +3,17 @@ layout: "post"
 title: "spring-boot -web-flux"
 date: "2017-05-22 10:03"
 ---
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [Spring5 :使用 spring webflux 开发 Reactive 应用](#spring5-使用-spring-webflux-开发-reactive-应用)
+	- [1. 创建一个Spring boot项目](#1-创建一个spring-boot项目)
+	- [2. 创建一个Handler来处理http](#2-创建一个handler来处理http)
+	- [3. 创建一个Routes 类来定义应用的路由](#3-创建一个routes-类来定义应用的路由)
+	- [4. 创建一个HttpeServerConfig 类来创建一个httpServer类](#4-创建一个httpeserverconfig-类来创建一个httpserver类)
+	- [5. 创建一个Spring boot main 类来启动应用程序](#5-创建一个spring-boot-main-类来启动应用程序)
+	- [6. 创建一个Testing  类来测试应用程序](#6-创建一个testing-类来测试应用程序)
+
+<!-- /TOC -->
 
 # Spring5 :使用 spring webflux 开发 Reactive 应用
 
