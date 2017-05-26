@@ -31,6 +31,25 @@ spring5 仍处于一个里程碑的发布版本.
 ## 1. 创建一个Spring boot项目
 1.创建项目
 
+使用 Spring initializer 创建一个SPring boot 项目.将如下依赖加入pom.xml中
+```
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+SPring-boot-starter-webflux包中带了Spring-webflux//netty.其他项目需要自行添加.
 
 2.建立一个简单的用户数据表和从list中获取到的user数据的DTO类.
 
@@ -187,7 +206,7 @@ public class HttpServerConfig {
   tomcat/undertow.由于netty是异步的基于事件驱动的天性,他就是一个很好的响应式应用.Tomcat 使用Java Nio 去实现servlet 规范.Netty是一个优化过的异步的/事件驱动的非阻塞IO的NIO的实现.
 
 - tomcat服务也呢给你使用如下的代码构建:
-  - ```
+  ```
   Tomcat tomcatServer = new Tomcat();
   tomcatServer.setHostname("localhost");
   tomcatServer.setPort(Integer.valueOf(environment.getProperty("server.port")));
