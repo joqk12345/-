@@ -10,7 +10,7 @@ if "未命中" then
     --> [全部推送] "关键词/转写"
     if "有结果" then
       --> [true] "分类"
-      --> (*)
+      -->[全部推送] (*)
     else
       --> [false] (*)
       endif
@@ -18,7 +18,7 @@ if "未命中" then
       --> [false] (*)
       endif
 else
-  --> (*)
+  -->[false] (*)
 endif
 
 
