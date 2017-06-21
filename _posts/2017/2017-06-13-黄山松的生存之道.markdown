@@ -1,3 +1,4 @@
+
 ---
 layout: "post"
 title: "黄山松的生存之道"
