@@ -177,11 +177,17 @@
 ## 多媒体相关
 1. bit-map
 2. 语音
+    1. 数据采集--数据预处理-数据标注(标注系统)--数据训练--数据上线等
+3. 视频
+    1. ffmpeg
+    2. openCV
 
 ##  MongoDB
 
 ## HBase 
 1. flash数据结构
+
+
 
 
 ##　java语言
@@ -202,6 +208,28 @@
     1. 集合
     2. 流
 
+##　linux相关
+
+## 云计算
+1. IAAS Openstack
+2. 虚拟化
+3. 容器技术
+    1. docker
+    2. k8s
+## 分布式存储相关
+1. NFS/阵列存储集中式存储
+2. 龙存
+3. ceph的分部式存储
+
+## 脚本语言python/shell
+1. puppet
+2. chef自动化运维
+3. zebix
+
+## 深度神经网络相关
+1. tensor flow
+2. dnn4j
+3. GPU与并行计算
 
 ## 多线程与并发
 ## GC
