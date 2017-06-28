@@ -232,6 +232,18 @@
 3. GPU与并行计算
 
 ## 多线程与并发
+1. ![线程状态](http://img.blog.csdn.net/20170304134110520?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2luYXRfMzU1MTIyNDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+2. 线程状态
+    1. 新建:新建一个线程对象
+    2. 可运行:从锁池里难道锁标识
+    3. 运行:OS选中执行
+    4. 阻塞:等待用户输入
+        1. 线程因为某种原因放弃了cpu使用权,也让出了cpu timelice ,暂时停止运行.直到线程进入可运行(runnable)状态,才有机会再次获得cpu timeslice转到(running)状态.
+        2. 分类
+            1. 等待阻塞:运行的线程执行o.wait()方法,JVM会把该线程放入等待队列(waitting queue)中
+            2. 同步阻塞:运行的线程在获取对象的同步锁时,若该同步锁被别的线程占用,JVM则会把改现车给你放入锁池中(lock pool)中.
+            3. 其他阻塞:运行的线程执行Thread.sleep(long ms)或t.join()方法,或者发出了I/O请求时,JVM会把改线程置为阻塞状态.当sleep()状态超时/join()等待线程终止是hi欧,或者I/o处理完毕的时候,线程重新转入可以运行(runnable)状态.   
+    5. 死亡:run()/main()方法结束/或者异常退出
 ## GC
 1. GC收集器类型
     1. 串行
