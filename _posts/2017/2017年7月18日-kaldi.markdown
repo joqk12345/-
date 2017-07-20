@@ -1,0 +1,92 @@
+
+
+## kaldi的法律约束
+1. 遵从Apache license 2.0
+2. 他是一个社区型项目
+3. 你可以随便修改,给他命名,
+
+## kaldi 预览
+
+>
+ Kaldi需要对语音识别和ASR系统的一般知识
+ 了解脚本编程语言(bash/perl/python)的基础知识也很好
+ C++在将来也很有用
+
+>基础
+
+1. atlas:线性代数领域的计算机自动化和优化
+2. autoconf :在不同操作系统上自动编译软件
+3. automake:创建便携式Makefile文件
+4. git : 分布式修订控制系统
+5. libtool 创建静态和动态库
+6. svn:修订控制系统
+7. wget 使用Htt,https和ft协议的数据传输
+8. zlib 数据压缩
+
+你可能还需要
+
+* awk  编程语言,用户搜索和处理文件和数据流中的模式
+* bash unix shell 和脚本编程语言
+* grep 用于搜索文本数据集的命令使用程序,用于匹配正则表达式的行
+* make 从源代码自动构建可执行程序和库
+* perl 动态编程语言,完美的文本文件处理.
+
+
+
+```
+-rw-r--r--.  1 root root 16463 Jul 17 03:20 COPYING
+drwxr-xr-x. 51 root root  4096 Jul 17 03:20 egs
+-rw-r--r--.  1 root root   258 Jul 17 03:20 INSTALL
+drwxr-xr-x.  8 root root  4096 Jul 17 03:20 misc
+-rw-r--r--.  1 root root  2929 Jul 17 03:20 README.md
+drwxr-xr-x. 45 root root  4096 Jul 17 11:40 src
+drwxr-xr-x.  9 root root  4096 Jul 17 11:12 tools
+drwxr-xr-x.  2 root root  4096 Jul 17 03:20 windows
+
+```
+
+1. tools下面有许多的工具包
+    1. 最重要的工具包为openfst,如果你想深入理解kaldi你就要理解OpenFst
+    2.  [参考](!http://www.openfst.org/)
+    3. wfst :权重有限状态机
+2. src{Kaldi源代码}
+    1. Makefile
+    2. 在makefile内容有一个test模块,输入make test命令之后就能到此变量子目录下跑边所有的测试程序.所以有的单元测试必须通过.
+    3. make valgrind,是一个同样的测试,用于内存检查,并且能够发现个姑娘说的错误.如果他不能跑,没有关系,他目前并不重要,
+    4. 如果他花费的时间比较长,停止他,通过ctrl+c
+    5. 在base目录下,查看makefile有个 inclue ../kaldi.mk
+    6. 在kaldi.mk他好了一些规则与valgrind先关(内存/调试),还有一些系统标准的配置.
+    7. 在base目录下kaldi-math.h/kaldi-types.h
+    8. 在util目录下,查看text-util.h
+    9. kaldi语法规则参考 [kaldi语法规则](!http://kaldi-asr.org/doc/style.html)
+    10. 意图树 和  树的状态 .gmmbin
+    11. matrix  ,[矩阵库参考](!http://kaldi-asr.org/doc/matrixwrap.html)
+3. egs(实例脚本,允许你快速构建超过30种流行语音预料库的ASR系统,每个项目附带文档)
+    1. LDC ship
+4. misc {额外的工具和耗材,不需要适当的kaldi功能}
+5. windows(使用windows运行kaldi的工具)
+
+
+
+
+## 基础知识
+1. 发生数据--->声学模型
+    1. <speakerid><gender>
+    2. <uterranceId><full_path_to_audio_file>
+    3. <uterranceId><text_transcription>
+    4. <uterranceId><speakerID>
+    5. <text_transcription>
+
+2. 语言数据(lanuage data--->语言模型
+    1. 词库(lexicon.txt)文件
+        1. <word> <phone1> <phone2>
+    2. 无静音的音素(phone)文件
+    3. 静音因素文件(silence_phones.txt)
+    4. 可选静音文件(optional_silence.txt)
+
+3. 数据准备
+    1. [数据准备](!http://kaldi-asr.org/doc/data_prep.html)
+
+
+
+[参考教程](!http://kaldi-asr.org/doc/kaldi_for_dummies.html)
