@@ -34,6 +34,10 @@
     4. git merge dev  --no-ff -m 
     5. git log --oneline --graph
 
+6. 使用方式
+    1. 配置git 全局变量
+    2. 配置git-prompts.sh
+
 配置帐号信息：
 
 ```

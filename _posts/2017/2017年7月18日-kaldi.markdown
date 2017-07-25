@@ -89,4 +89,17 @@ drwxr-xr-x.  2 root root  4096 Jul 17 03:20 windows
 
 
 
+
+## 编译过程
+1. 在先前条件准备到位之后才能执行
+2. 我的环境是Ubuntu 16.0.4
+3. 到tools 目录下 make  文件. 可以使用make -j 10 
+    1. [安装参考文档](!http://kaldi-asr.org/doc/tutorial_setup.html)
+    2. [编译文档](!http://kaldi-asr.org/doc/build_setup.html)
+4. 到src目录下分别执行以下命令:
+    1. cd ../src
+    2. ./configure
+    3. make 或者可以make -j n ,其中n 与CPU的核数有关
+
+
 [参考教程](!http://kaldi-asr.org/doc/kaldi_for_dummies.html)
