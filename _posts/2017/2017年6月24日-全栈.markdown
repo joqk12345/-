@@ -1,0 +1,102 @@
+
+## 全栈
+1. 用于打造一个软件的所有技术的集合
+2. The set of all technologies used to build a system
+
+##Ambari--R&D
+1. java experence
+2. using javascript library
+3. html /css
+4. restful api
+5. data struce 
+6. clean coding
+7. BS/MS
+
+## 学习过程
+1. 中古汉语语音教程
+2. 广韵全字表
+3. 韵典网
+4. 汉典网
+5. 越狱配词字库
+6. Nver 粤语
+7. 
+
+## 学习感受
+1. 谦虚
+2. 骄傲
+3. 孤独
+4. 归属
+
+## 纸上学来终觉浅
+1. 需求分析
+    1. 多语种查询
+        1. 中古
+        2. 普
+        3. 粤
+        4. 日
+        5. 韩
+        6. 越
+    2. 离线查询
+        1. 瞬间响应
+        2. 体积小巧
+    3. 双向查询
+        1. 依字查音
+        2. 依音查字
+    4. 收字范围
+        1. u+4E00 ~ 9FA5 (uicode) 20902字
+    5. 真人发音
+        1. 上万个音节 ,100M音频
+
+2. 爬取字音数据(人生苦短,我用python)
+    1. urllib  (发送HTTP请求,获取网页源码)
+    2. BeautifulSoup(解析网页源码,提取字音数据)
+    3. sqlite3(保存数据库,支持全文检索)
+
+```
+for unicode in range(0x4E00,0x9FA6)
+    url ="http://hanjia.naver.com/hajia?='unichar*unicode"
+    html = urllib2.urlopen(url).read()
+    soup = BeautifulSoup(html)
+    tag = soup.select('div.entrytop_box dd strong)
+    reading = tag[0].text
+    print unichr(unicode),reading
+```
+ 
+    4. 把字音数据保存成SQLite数据库
+    5. 穿件支持全文检索的表格(fts3)
+    6. 注入数据
+
+##学习android开发
+1. 照猫画虎,实现数独游戏
+2. 潜心静气,阅读官方文档
+3. 披荆斩棘,打造字典应用
+
+## 界面设计
+1. 字典
+    1. FragmentTabHost
+        1. Dictionary Fragment
+            1. SearchResult Fragment
+                1. Search Result item
+                2. Search Result item
+
+2. 生词本
+
+## 字音查询流程图(Python语言适合写小程序,java语言适合写大型程序)
+1. 界面部分
+    CustomSearchView -MCPDatabase
+
+##　拼音系统转换
+1. 声调-->1,2,3,4
+2. 给定一个汉语拼音音节,声调应该表在第几个字幕上
+3. 通过元音规律来
+
+## 上下文菜单
+
+## 小细节
+1. 查询后隐藏键盘
+2. 横屏界面
+
+
+
+
+

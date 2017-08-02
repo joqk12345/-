@@ -1,0 +1,184 @@
+---
+layout: "post"
+title: "模型替换文档"
+date: "2017-06-02 14:52"
+version:"1.3"
+---
+
+
+
+
+
+## 将关键词引擎环境下的互联网模型替换到纯识别环境下
+
+说明:
+引擎版本路径:均在7.205下面
+
+互联网模型的关键词:
+```
+/datapool/EngineVersion/MandarinKeyword/net/
+Engine_Keyword-net-wxb-120160802432-v1.0.tar.gz
+```
+
+电信纯识别环境:
+```
+/datapool/EngineVersion/MandarinKeyword/onlyRec/Engine_Keyword-onlyRec-120161026433-v2.4.tar.gz
+```
+
+
+
+### 0. 现有两套环境
+1. 互联网模型环境
+
+> Engine_Keyword-net-wxb-120160802432-v1.0.tar.gz
+
+解压后路径
+> /home/joqk/20170602/Engine_Keyword
+
+2. 纯识别环境
+
+> Engine_Keyword-onlyRec-120161026433-v2.4.tar.gz
+
+解压后路径
+> /home/joqk/20170602/Engine_Stt00
+
+### 1. 替换声学模型
+1. 切换到纯识别环境的所在路径下
+> cd /home/joqk/20170602/Engine_Stt00/KEYWORD_AND_TRANSLATION/KWSAPI_ENV/parse/lvcsr_standard/plp_pitch_hlda_fmpe_mpe
+
+2. 新建一个目录nnmodel1
+> mkdir nnmodel1
+
+3. 切换到当前目录下
+> cd nnmodel1
+
+4. copy原有关键词环境下的声学模型到此路径
+  > cp ../../../../../../Engine_Keyword/KEYWORD_AND_TRANSLATION/KWSAPI_ENV/parse/lvcsr_standard/plp_pitch_hlda_fmpe_mpe/nnmodel/* ./
+5. 检查此目录
+
+```
+[root@localhost nnmodel1]# ll
+total 145040
+-rw-r--r-- 1 root root    350168 Jun  2 14:07 phonemap.bin  
+-rw-r--r-- 1 root root    129462 Jun  2 14:07 wxb_300h_smbr_epoch2.arpa
+-rw-r--r-- 1 root root 148034032 Jun  2 14:07 wxb_300h_smbr_epoch2.bin
+```
+若在此目录下有此三个文件则表示替换成功.
+wxb_300h_smbr_epoch2.arpa{声学模型先验}
+wxb_300h_smbr_epoch2.bin{声学模型}
+phonemap.bin {声学模型triphone聚类map表}
+
+### 2. 替换语言模型
+1. 切换到语言模型目录下
+> cd /home/joqk/20170602/Engine_Stt00/KEYWORD_AND_TRANSLATION/model/net
+
+2. copy原有语言模型到此目录
+>  cp ../../../../Engine_Keyword/KEYWORD_AND_TRANSLATION/model/net/final_73.Tbfsm ./
+
+3. 验证
+
+```
+[root@localhost net]# ll -h
+total 3.8G
+-rw-r--r-- 1 root root 331K Jan 10 17:57 final_20170109.Tbfsm
+-rw-r--r-- 1 root root 3.8G Jun  2 14:10 final_73.Tbfsm
+```
+
+### 3. 替换发音字典
+1. 切换到发音词典目录下
+> cd /home/joqk/20170602/Engine_Stt00/KEYWORD_AND_TRANSLATION/model
+
+2. copy原有发音词典到此目录
+>  cp ../../../../Engine_Keyword/KEYWORD_AND_TRANSLATION/model/syllvocab.list ./
+>  cp ../../../../Engine_Keyword/KEYWORD_AND_TRANSLATION/model/wfst_4w6.word ./
+
+3. 删除文件名后两位为TB的文件
+
+4. 验证
+
+
+### 4. 替换hmm模型
+1. 切换到hmm路径下
+> cd /home/joqk/20170602/Engine_Stt00/KEYWORD_AND_TRANSLATION/model/hmm
+
+2. copy原有hmm内容到此目录
+>  cp ../../../../Engine_Keyword/KEYWORD_AND_TRANSLATION/model/hmm/* ./
+
+3. 查看文件
+
+```
+[root@localhost hmm]# ll -h
+total 284M
+-rw-r--r-- 1 root root 195M Sep 29  2016 hmmdef
+-rw-r--r-- 1 root root  89M Sep 29  2016 hmmdef.bin
+-rw-r--r-- 1 root root  889 Sep 29  2016 mono.list
+```
+
+### 5. 修改配置文件
+1. 切换到配置文件目录下
+> cd /home/joqk/20170602/Engine_Stt00/KEYWORD_AND_TRANSLATION/model/scripts
+2. 修改配置文件WFSTDecoder_offline_lstm_onlyrec.cfg
+
+修改dnn域下面的三个声学模型的配置文件
+
+```
+[DNN]
+NStateNum=8000
+UseMLPPost=true
+UseStatePrior=true
+
+StateProbFile=../../KWSAPI_ENV/parse/lvcsr_standard/plp_pitch_hlda_fmpe_mpe/nnmodel1/wxb_300h_smbr_epoch2.arpa
+NNModel=../../KWSAPI_ENV/parse/lvcsr_standard/plp_pitch_hlda_fmpe_mpe/nnmodel1/wxb_300h_smbr_epoch2.bin
+TriphoneMapFile=../../KWSAPI_ENV/parse/lvcsr_standard/plp_pitch_hlda_fmpe_mpe/nnmodel1/phonemap.bin
+
+```
+
+修改global域下面的DictFileName配置路径
+修改语言模型的配置
+
+```
+[global]
+EngineType=wfst
+ModelType=dnn
+#RefFileName=
+#TiedListFileName=
+#fsmFileName=                   #fsmFileName, InSymsFileName, OutSymsFileName must be together
+#InSymsFileName=
+#OutSymsFileName=
+OutputFormat=ref
+#ref: always use this; another option: mlf, xmlf, trans, verbose
+LogFileName=wfst_decoder.log
+
+DictFileName=../wfst_4w6.word
+
+#DictFileName=../wfst_20170109.word
+# WordPhonemePinyinDict=../wfst_4w3_phones_sysllable.word
+HTKModelsFileName=../hmm/hmmdef
+
+#bfsmFileName=../net/final.Tbfsm300M
+bfsmFileName=../net/final_73.Tbfsm
+
+```
+
+验证global域下的hmm相关的文件
+
+```
+HTKModelsFileName=../hmm/hmmdef
+
+#bfsmFileName=../net/final.Tbfsm300M
+bfsmFileName=../net/final_73.Tbfsm
+
+InputListName=tlist.txt
+TaskListFile=tlist.txt:w
+InputFormat=htk
+OutputFileName=./outputBase/result_phn90_main80.txt
+LatticeDir=./lat
+TITLatticeLabel=true
+LatticeAuxInfo=triphone
+LatticeWithSil=false
+MonoListFileName=../hmm/mono.list
+```
+
+### 6. 验证
+1. 替换引擎授权以及配置文件
+2. 按照原有启动引擎流程进行验证

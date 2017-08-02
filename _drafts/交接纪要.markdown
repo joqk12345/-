@@ -1,0 +1,75 @@
+---
+layout: "post"
+title: "交接纪要"
+date: "2017-07-12 17:52"
+---
+
+## FAQ (2017年7月12日)
+1. 如何判断语音格式
+  2. 通过程序判断
+  3. cooledit工具
+  2.wave格式 说明 http://192.168.7.205/projects/gd/wiki/Wave%E8%AF%AD%E9%9F%B3%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3
+2. 语音处理流程-可以配置
+3. 加一个平台通用接口机,方便测试跟接口无关{明康在整理}
+4. 判断操作系统可以开多少线
+  5. 如何看:核数/cpu个数/线数/品牌intel/主频小于2.0Ghz
+  6.识别/关键词{耗计算}跟CPU的核数有关
+    1. 2*6 服务器(24线):一核两线,上线24线.
+  7. 语种/说话人/人声非人声等
+    8. 指标
+5. 统一平台搭建在多机上
+  6. 搭建nginx
+  7. kafkapartation跟引擎计算线程有关,
+    8. 2*6服务器 ,一台开16,  两台32线.对应的kafka的topic的partation是32.
+    9. 可以通过命令修改扩展topic下partation:
+      > ./kafka-topics.sh --zookeeper localhost:2182  --alter --partitions 20 --topic test
+
+      > [参考链接](http://www.cnblogs.com/joqk/p/6297022.html)
+
+---
+## FAQ (2017年7月13日15:10:10)
+1. 版本管理规定
+  2. http://192.168.9.71/gbd/documents/tree/master/project
+2. 软件发布流程等
+  3. http://192.168.9.71/gbd/documents/tree/master/project
+3. git/redmine交接维护
+  4. 学洋
+4. gitlab上的项目建立以及维护需指定人
+  5. 不需要删掉
+  6. 提升一个人当admin-
+---
+1. 在家测试的时候，没有部署923接口机，Postman是否相当于923接口机？923接口机的作用包括：向调度机发请求，定时删除共享磁盘上的数据？还有其他功能吗？
+  1. postman是一个http的发送工具
+  2. 923负责搬运voc数据,向调度机发送请求,同时向es写话单信息
+  3. 定时删除共享机器上的voc文件,不删除解析出来的pcm文件.
+2. 引擎处理的结果返回调度机？调度机再把结果写入ES中？
+  3. 返回调度机,调度机把结果post给调度接口机.由调度接口机将结果写入es
+3. 做了一次测试，发现各个引擎中的日志没变，如何查看引擎中的日志？
+  4. nohup 启动来看日志
+4. 923接口机中下发调度的路径为 http://IP
+地址:8083/gxb.service/postAudioComparisonTask，是否除了ip地址，其他的都不变，无论部署什么任务？
+  1. 参考语音分析系统接口协议V1.6.0.doc
+5. 语音分析系统接口协议V1.6.0.doc增加对amr格式支持.
+6. ES入库汉语有问题
+  7. 查看是格式有错误
+7. dev邮件列表
+  8. 目前张聪在维护
+8. 前台批量添加关键词有歧义
+  9. 已经提bug
+
+## FAQ (2017年7月14日)
+1. 在前台界面上配置关键词,失效
+  1. 防火墙关闭
+  2. 前台mysql表里的keywordinfo
+  3. zookeeper里有一个dbbase节点,下的keyword
+  4. 在前台配置界面里需要配置好配置下发接口
+  5. 看调度日志和前台日志
+2. 在前台界面上--计算节点管理添加调度的ip和端口号,以便监控调度的服务状态
+3. web-前端话单查询es错误
+  4. 集群内部有多个es启动
+  5. 可以通过配置es集群名称来实现
+    6. 界面配置application.properties:cluster.name=elasticsearch_zj
+    7. es配置文件配置:cluster.name: elasticsearch_zj
+## FAQ (2017年8月1日)
+1. hadoop 分布式安装
+2. hbase统一平台存储检索数据

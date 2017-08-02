@@ -1,0 +1,117 @@
+---
+layout: "post"
+title: "centos网络自检文档"
+date: "2017-05-25 10:41"
+---
+
+
+## 一. centos 网络自检
+> 这里修改的linux版本是基于以下版本
+
+```
+cat /etc/issue
+CentOS release 6.8 (Final)
+Kernel \r on an \m
+
+lsb_release -a
+LSB Version:	:base-4.0-amd64:base-4.0-noarch:core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
+Distributor ID:	CentOS
+Description:	CentOS release 6.8 (Final)
+Release:	6.8
+Codename:	Final
+
+cat /etc/redhat-release
+CentOS release 6.8 (Final)
+```
+### 网络检查   
+- [ ] 主机名
+1. hostname  一般都是localhost.localdomain  可以通过hostname临时设置主机名,但是重启机器后失效
+- [ ] 配置文件名名称
+1. cat /etc/sysconfig/network 修改主机名 通过reboot重启之后生效
+
+```
+      NTWORKING=yes
+      HOSTNAME=localhost
+```
+- [ ] 查看IP地址配置
+1. 通过: cat /etc/sysconfig/network-scripts/ifcfg-eth0 查看
+
+```
+DEVICE=eth0
+TYPE=Ethernet
+UUID=10e7ef04-64c9-4b04-904b-d0fd7312df71
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=static
+IPADDR=192.168.7.221
+PREFIX=16
+GATEWAY=192.168.2.1
+DNS1=223.5.5.5
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=yes
+IPV6INIT=no
+NAME="System eth0"
+HWADDR=A0:42:3F:31:75:5C
+LAST_CONNECT=1454314108
+```
+> 现场环境信息
+![烽火现场网络配置](image/ipv4setting.jpg)
+
+- [ ] 查看hosts文件
+> cat /etc/host
+
+```
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.17.247 test247
+199.59.148.16  maven.twttr.com
+80.86.85.8  datanucleus.org
+192.168.7.209 gbd209
+```
+- [ ] 网络负载查询
+> 使用dstat命令  观察 net/total列数据情况
+
+- [ ] 查看网络
+> 1. ping 网关地址  ping 192.168.2.1
+> 2. 查看核心路由表
+
+```
+[root@localhost network-scripts]# netstat -r
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+192.168.122.0   *               255.255.255.0   U         0 0          0 virbr0
+172.17.0.0      *               255.255.0.0     U         0 0          0 docker0
+192.168.0.0     *               255.255.0.0     U         0 0          0 eth0
+default         192.168.2.1     0.0.0.0         UG        0 0          0 eth0
+```
+> 3.查看核心端口的链接数量 有7个链接与2181端口链接(tcp协议为全双工链接)
+
+```
+[root@localhost network-scripts]# netstat -apn |grep 2181
+tcp        0      0 :::2181                     :::*                        LISTEN      25471/java          
+tcp        0      0 ::ffff:127.0.0.1:39854      ::ffff:127.0.0.1:2181       ESTABLISHED 25795/java          
+tcp        0      0 ::1:2181                    ::1:29772                   ESTABLISHED 25471/java          
+tcp        0      0 ::ffff:127.0.0.1:39874      ::ffff:127.0.0.1:2181       ESTABLISHED 25581/java          
+tcp        0      0 ::ffff:127.0.0.1:2181       ::ffff:127.0.0.1:39828      ESTABLISHED 25471/java          
+tcp        0      0 ::ffff:127.0.0.1:2181       ::ffff:127.0.0.1:39829      ESTABLISHED 25471/java          
+tcp        0      0 ::1:2181                    ::1:29816                   ESTABLISHED 25471/java          
+tcp        0      0 ::ffff:127.0.0.1:2181       ::ffff:127.0.0.1:39854      ESTABLISHED 25471/java          
+tcp        0      0 ::ffff:127.0.0.1:39829      ::ffff:127.0.0.1:2181       ESTABLISHED 25581/java          
+tcp        0      0 ::1:29816                   ::1:2181                    ESTABLISHED 25795/java          
+tcp        0      0 ::ffff:127.0.0.1:39828      ::ffff:127.0.0.1:2181       ESTABLISHED 25581/java          
+tcp        0      0 ::ffff:127.0.0.1:2181       ::ffff:127.0.0.1:39874      ESTABLISHED 25471/java          
+tcp        0      0 ::1:29772                   ::1:2181                    ESTABLISHED 25581/java          
+tcp        0      0 ::ffff:127.0.0.1:39832      ::ffff:127.0.0.1:2181       ESTABLISHED 25795/java          
+tcp        0      0 ::ffff:127.0.0.1:2181       ::ffff:127.0.0.1:39832      ESTABLISHED 25471/java
+```
+>当hmaster 挂掉之后确实连接数变为 2个
+
+```
+[root@localhost hbase-1.1.2]# netstat -apn|grep 2181
+tcp        0      0 :::2181                     :::*                        LISTEN      29710/java          
+tcp        0      0 ::ffff:127.0.0.1:40470      ::ffff:127.0.0.1:2181       ESTABLISHED 30032/java          
+tcp        0      0 ::1:30404                   ::1:2181                    ESTABLISHED 30032/java          
+tcp        0      0 ::ffff:127.0.0.1:2181       ::ffff:127.0.0.1:40470      ESTABLISHED 29710/java          
+tcp        0      0 ::1:2181                    ::1:30404                   ESTABLISHED 29710/java   
+```
+> 也可以通过界面 http://192.168.7.221:16010/master-status 上有个zkdump链接来查看

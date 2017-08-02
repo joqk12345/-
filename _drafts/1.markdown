@@ -1,0 +1,31 @@
+---
+layout: "post"
+title: "1"
+date: "2017-05-19 16:07"
+---
+```
+  snippets: 片段
+
+```
+* snippets的定义
+* snippets的自定义片段
+* snippets的改写
+
+--
+1. 最逍遥快乐的事情?
+2. 最心爱的女人是谁?
+3.
+
+# snippets快捷键
+  * snippets:available
+    * 不同的后缀迷名称使用此命令来提示快捷键
+  *
+
+  " 山茶相对阿谁摘,细雨无人我独来"
+  " 说似与君君不见,烂红如火雪中开"
+
+
+
+| snippet  | 备注     |
+|:---------|:---------|
+| Item One | Item Two |

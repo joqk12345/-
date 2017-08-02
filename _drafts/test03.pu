@@ -1,0 +1,26 @@
+
+@startuml
+(*) --> "初始化"
+-->[预处理与语音头校验] "固定音频检索"
+if "未命中" then
+--> [true] "语音非语音检测"
+  if "是否有语音" then
+    --> [true] "合成音检测"
+    --> [全部推送] "说话人检测"
+    --> [全部推送] "关键词/转写"
+    if "有结果" then
+      --> [true] "分类"
+      -->[全部推送] (*)
+    else
+      --> [false] (*)
+      endif
+  else
+      --> [false] (*)
+      endif
+else
+  -->[false] (*)
+endif
+
+
+
+@enduml
